@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Users } from './user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserDto } from './dto/user.dto';
 import { randomBytes } from 'crypto';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class UsersService {
     @InjectRepository(Users) private userRepository: Repository<Users>,
   ) {}
 
-  createUser(user: CreateUserDto): Promise<CreateUserDto> {
+  createUser(user: UserDto): Promise<UserDto> {
     const randomString = randomBytes(2).toString('hex').toUpperCase();
 
     const newUser = this.userRepository.create({
@@ -21,5 +21,21 @@ export class UsersService {
       password: user.password ?? 'password',
     });
     return this.userRepository.save(newUser);
+  }
+
+  // getUsers(): Promise<Users[]> {
+  //   return this.userRepository.find();
+  // }
+
+  // get all users
+  getUsers() {
+    return this.userRepository.find();
+  }
+
+  // get user by id
+  getUser(id: number) {
+    return this.userRepository.findOne({
+      where: { id },
+    });
   }
 }
