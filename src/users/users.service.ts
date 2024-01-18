@@ -51,9 +51,32 @@ export class UsersService {
     return userFound;
   }
 
+  // get user by username
+  async getUserByUsername(username: string) {
+    const userFound = await this.userRepository.findOne({
+      where: { username },
+    });
+
+    if (!userFound)
+      return new HttpException(
+        'El usuario que has escrito no concuerda con ninguno que tengamos registrado en la base de datos. Mira de escribirlo bien si piensas que sí existe.',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return userFound;
+  }
+
   // delete user by id
-  deleteUser(id: number) {
-    return this.userRepository.delete(id);
+  async deleteUser(id: number) {
+    const result = await this.userRepository.delete(id);
+
+    if (result.affected === 0)
+      return new HttpException(
+        'No se ha encontrado el usuario que quieres borrar.',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return result;
   }
 
   // update user by id

@@ -27,6 +27,12 @@ export class UsersController {
     return this.userService.getUser(id);
   }
 
+  // get user by username
+  @Get('username/:username')
+  getUserByUsername(@Param('username') username: string) {
+    return this.userService.getUserByUsername(username);
+  }
+
   @Post()
   createUser(@Body() newUser: UserDto) {
     return this.userService.createUser(newUser);
