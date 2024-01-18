@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Users } from './user.entity';
 import { UserDto } from './dto/user.dto';
-import { randomBytes } from 'crypto';
 import { UserUpdateDto } from './dto/user-update.dto';
 
 @Injectable()
@@ -13,14 +12,18 @@ export class UsersService {
     @InjectRepository(Users) private userRepository: Repository<Users>,
   ) {}
 
-  createUser(user: UserDto): Promise<UserDto> {
-    const randomString = randomBytes(2).toString('hex').toUpperCase();
-
-    const newUser = this.userRepository.create({
-      ...user,
-      username: user.username ?? `user_name_${randomString}`,
-      password: user.password ?? 'password',
+  async createUser(user: UserDto) {
+    const userFound = await this.userRepository.findOne({
+      where: { username: user.username },
     });
+
+    if (userFound)
+      return new HttpException(
+        'Pesao, que ya existe el usuario',
+        HttpStatus.CONFLICT,
+      );
+
+    const newUser = this.userRepository.create(user);
     return this.userRepository.save(newUser);
   }
 
@@ -34,11 +37,18 @@ export class UsersService {
   }
 
   // get user by id
-  getUser(id: number) {
-    console.log('service id 👉', id, typeof id);
-    return this.userRepository.findOne({
+  async getUser(id: number) {
+    const userFound = await this.userRepository.findOne({
       where: { id },
     });
+
+    if (!userFound)
+      return new HttpException(
+        'Pesao, que no existe el usuario. Busca bien!!',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return userFound;
   }
 
   // delete user by id
