@@ -39,4 +39,9 @@ export class UsersService {
       where: { id },
     });
   }
+
+  // delete user by id
+  deleteUser(id: number) {
+    return this.userRepository.delete(id);
+  }
 }
