@@ -34,6 +34,7 @@ export class UsersService {
 
   // get user by id
   getUser(id: number) {
+    console.log('service id 👉', id, typeof id);
     return this.userRepository.findOne({
       where: { id },
     });
