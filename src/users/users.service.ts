@@ -80,7 +80,18 @@ export class UsersService {
   }
 
   // update user by id
-  updateUser(id: number, user: UserUpdateDto) {
-    return this.userRepository.update(id, user);
+  async updateUser(id: number, user: UserUpdateDto) {
+    const userFound = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!userFound)
+      return new HttpException(
+        'No se ha encontrado el usuario que quieres actualizar.',
+        HttpStatus.NOT_FOUND,
+      );
+
+    const updatedUser = await this.userRepository.update(id, user);
+    return updatedUser;
   }
 }
