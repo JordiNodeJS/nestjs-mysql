@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Users } from './user.entity';
-import { UserDto } from './dto/user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class UsersService {
     @InjectRepository(Users) private userRepository: Repository<Users>,
   ) {}
 
-  async createUser(user: UserDto) {
+  async createUser(user: CreateUserDto) {
     const userFound = await this.userRepository.findOne({
       where: { username: user.username },
     });
