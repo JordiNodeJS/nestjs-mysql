@@ -27,10 +27,6 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  // getUsers(): Promise<Users[]> {
-  //   return this.userRepository.find();
-  // }
-
   // get all users
   getUsers() {
     return this.userRepository.find();
