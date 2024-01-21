@@ -5,13 +5,17 @@ import { Repository } from 'typeorm';
 import { Users } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserUpdateDto } from './dto/user-update.dto';
+import { CreateProfileDto } from './dto/create-profile.dto';
+import { Profile } from './entities/profile.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(Users) private userRepository: Repository<Users>,
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
   ) {}
 
+  // create user
   async createUser(user: CreateUserDto) {
     const userFound = await this.userRepository.findOne({
       where: { username: user.username },
@@ -89,5 +93,26 @@ export class UsersService {
 
     const updatedUser = await this.userRepository.update(id, user);
     return updatedUser;
+  }
+
+  // create user profile
+  async createUserProfile(id: number, profile: CreateProfileDto) {
+    const userFound = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!userFound)
+      return new HttpException(
+        'No se ha encontrado el usuario al que quieres añadir el perfil.',
+        HttpStatus.NOT_FOUND,
+      );
+
+    const newProfileEntity = this.profileRepository.create(profile);
+    const savedNewProfileEntity = await this.profileRepository.save(
+      newProfileEntity,
+    );
+    userFound.profile = savedNewProfileEntity;
+
+    return this.userRepository.save(userFound);
   }
 }

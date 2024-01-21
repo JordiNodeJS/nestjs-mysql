@@ -1,5 +1,6 @@
-import { Entity, Column, BeforeInsert } from 'typeorm';
+import { Entity, Column, BeforeInsert, OneToOne, JoinColumn } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Profile } from './profile.entity';
 
 @Entity()
 export class Users {
@@ -22,7 +23,11 @@ export class Users {
   @Column({ nullable: true })
   authStrategy: string;
 
-  @BeforeInsert()
+  // The join column is used to establish the connection between the User entity and Profile entities.
+  @OneToOne(() => Profile, { cascade: true, eager: true })
+  @JoinColumn()
+  profile: Profile;
+
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
