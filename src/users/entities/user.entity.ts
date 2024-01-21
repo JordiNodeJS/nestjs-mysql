@@ -32,3 +32,17 @@ export class Users {
     this.password = await bcrypt.hash(this.password, 10);
   }
 }
+
+/*
+Equivalente a:
+CREATE TABLE users (
+    id INT AUTO_INCREMENT,
+    authStrategy VARCHAR(255),
+    profileId INT,
+    username VARCHAR(80),
+    password VARCHAR(100),
+    PRIMARY KEY (id),
+    FOREIGN KEY (profileId) REFERENCES Profile(id),
+    UNIQUE (profileId)
+);
+*/

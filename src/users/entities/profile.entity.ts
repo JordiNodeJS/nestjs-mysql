@@ -18,3 +18,17 @@ export class Profile {
   @Column({ nullable: true, default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }
+
+/* 
+Equivalente a:
+CREATE TABLE Profile (
+    id INT AUTO_INCREMENT,
+    firstName VARCHAR(50),
+    lastName VARCHAR(200),
+    age TINYINT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE (firstName, lastName)
+);
+
+*/
