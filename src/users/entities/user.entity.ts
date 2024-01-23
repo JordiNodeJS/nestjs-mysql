@@ -1,9 +1,10 @@
-import { Entity, Column, BeforeInsert, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Profile } from './profile.entity';
+import { Post } from '../../posts/post.entity';
 
 @Entity()
-export class Users {
+export class User {
   @Column({ primary: true, generated: true })
   id: number;
 
@@ -28,6 +29,9 @@ export class Users {
   @JoinColumn()
   profile: Profile;
 
+  @OneToMany(() => Post, (post) => post.author)
+  posts: Post[];
+
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
@@ -35,7 +39,7 @@ export class Users {
 
 /*
 Equivalente a:
-CREATE TABLE users (
+CREATE TABLE user (
     id INT AUTO_INCREMENT,
     authStrategy VARCHAR(255),
     profileId INT,
