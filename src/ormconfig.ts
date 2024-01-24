@@ -4,7 +4,7 @@ export const config: TypeOrmModuleOptions = {
   type: 'mysql',
   host: 'localhost',
   username: 'root',
-  password: 'root',
+  password: 'rootroot',
   port: 3306,
   database: 'nestjs_course',
   entities: [__dirname + '/**/*.entity{.ts,.js}'], // charges all entities
