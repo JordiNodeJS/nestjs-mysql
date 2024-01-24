@@ -1,9 +1,16 @@
-import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  BeforeInsert,
+  OneToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Profile } from './profile.entity';
 import { Post } from '../../posts/post.entity';
 
-@Entity()
+@Entity('users')
 export class User {
   @Column({ primary: true, generated: true })
   id: number;
@@ -32,6 +39,7 @@ export class User {
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
 
+  @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
