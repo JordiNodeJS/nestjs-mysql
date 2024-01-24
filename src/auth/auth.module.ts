@@ -17,11 +17,11 @@ import { PassportModule } from '@nestjs/passport';
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: `${jwtConstants.secret}`,
+      secret: jwtConstants.secret,
       signOptions: { expiresIn: '3600s' },
     }),
   ],
-  providers: [AuthService, UsersService, LocalStrategy],
+  providers: [AuthService, LocalStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })
