@@ -28,6 +28,18 @@ export class AuthService {
     return {
       ...user,
       access_token: this.jwtService.sign(payload),
+      refreshToken: this.jwtService.sign(payload, {
+        expiresIn: '7d',
+      }),
+    };
+  }
+
+  async refreshToken(user: User) {
+    // create token jwt
+    const payload = { username: user.username, sub: user.id };
+    return {
+      ...user,
+      access_token: this.jwtService.sign(payload),
     };
   }
 }

@@ -10,6 +10,7 @@ import { User } from '../users/entities/user.entity';
 import { Profile } from '../users/entities/profile.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt-strategy';
+import { RefreshTokenStrategy } from './strategies/refresh-token-strategy';
 
 @Module({
   imports: [
@@ -18,10 +19,10 @@ import { JwtStrategy } from './strategies/jwt-strategy';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '30s' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],
   controllers: [AuthController],
   exports: [AuthService],
 })

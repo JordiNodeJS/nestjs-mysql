@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guards';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth.guards';
 
 @Controller('auth')
 export class AuthController {
@@ -20,5 +21,11 @@ export class AuthController {
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
+  }
+
+  @UseGuards(RefreshJwtAuthGuard)
+  @Post('refresh')
+  async refresh(@Request() req) {
+    return this.authService.refreshToken(req.user);
   }
 }
