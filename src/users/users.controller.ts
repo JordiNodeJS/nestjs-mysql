@@ -7,16 +7,19 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { CreateProfileDto } from './dto/create-profile.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guards';
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get('all')
   getUsers() {
     return this.userService.getUsers();
